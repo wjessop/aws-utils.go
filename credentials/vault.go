@@ -63,7 +63,6 @@ func vaultToken() (string, error) {
 
 func vaultTokenFromUserConfig() (string, error) {
 	homedir := os.Getenv("HOME")
-	log.Debug("User home dir from environment is", homedir)
 	if homedir == "" {
 		return "", errors.New("Couldn't get home dir")
 	}
