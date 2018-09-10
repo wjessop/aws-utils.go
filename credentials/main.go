@@ -28,6 +28,23 @@ func FromEnvironment() (Credentials, error) {
 	return creds, nil
 }
 
+// FromVault returns an AWS credentials-a-like from vault data
+func FromVault(vaultKey string) (Credentials, error) {
+	vaultProvider, err := NewVaultCredsProvider(vaultKey)
+	if err != nil {
+		return nil, errors.Wrap(err, "Couldn't create vault AWS creds provider")
+	}
+
+	creds := FromProvider(vaultProvider)
+	_, err = creds.Get()
+
+	if err != nil {
+		return nil, errors.Wrap(err, "Could not get S3 creds from vault")
+	}
+
+	return creds, nil
+}
+
 // FromProvider returns a Credentials object from a provider
 func FromProvider(provider *VaultCredsProvider) Credentials {
 	return credentials.NewCredentials(provider)
